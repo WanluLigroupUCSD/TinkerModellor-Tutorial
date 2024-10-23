@@ -1,4 +1,4 @@
-Command Line Version
+Command Line Version Overview
 ====================
 
 Basic Usage
@@ -98,7 +98,7 @@ In addition to command-line operations, TinkerModellor can also be used as a Pyt
 
 Now that you understand how to run basic TinkerModellor commands, we will explore each sub-command's specific functionalities and options in detail, helping you fully harness the power of TinkerModellor.
 
-Modules and Functionalities
+Command Line Version Detailed Functionalities
 ===========================
 
 1. Transform Module
@@ -212,7 +212,7 @@ In this example, we will convert GROMACS topology and coordinate files (`.top` a
 After running this command, you should see the `tinker.xyz` file in the directory, containing the converted molecular structure data in Tinker format.
 
 2. Merge Module
-===============
+-------------------
 
 ### 2.1 Overview
 
@@ -302,7 +302,7 @@ After running this command, the tool generates two files:
 - `merged_ff.prm`: Contains the combined force fields from both the protein and ligand.
 
 3. Delete Module
-================
+-------------------
 
 ### 3.1 Overview
 
@@ -379,7 +379,7 @@ In this section, we'll walk you through a practical example of using the Delete 
 After running this command, the `deleted.xyz` file will be generated, containing the molecular structure of the protein with the specified atoms removed.
 
 4. Replace Module
-=================
+-------------------
 
 ### 4.1 Overview
 
@@ -474,7 +474,7 @@ After running this command, the tool generates two files:
 - `replaced_with_ff.prm`: Contains the merged force fields from both the protein and ligand.
 
 5. RMSD Module
-==============
+-------------------
 
 ### 5.1 Overview
 
@@ -561,7 +561,7 @@ In this section, located in the `example/rmsd`, we will demonstrate how to use t
 After executing this command, the tool will calculate the RMSD values for each frame in the trajectory relative to the reference structure. The results are stored in `rmsd.csv`, which can be opened and analyzed further.
 
 6. Distance Module
-==================
+-------------------
 
 ### 6.1 Overview
 
@@ -629,7 +629,7 @@ The Distance module operates by invoking the `TinkerModellor().distance()` metho
        csv.column_writer(result, args.out)
 
 7. Angle Module
-===============
+-------------------
 
 ### 7.1 Overview
 
@@ -697,7 +697,7 @@ The Angle module operates by invoking the `TinkerModellor().angle()` method, whi
        csv.column_writer(result, args.out)
 
 8. Connect Module
-=================
+-------------------
 
 ### 8.1 Overview
 
@@ -747,7 +747,7 @@ The Connect module operates by invoking the `TinkerModellor().connect()` method,
        tkm.connect(args.tk, parse_ndx(args.ndx), args.xyz)
 
 9. tk2pdb Module
-=================
+-------------------
 
 ### 9.1 Overview
 
@@ -822,7 +822,7 @@ In this section, located in the `example/tk2pdb/ex2`, we will demonstrate how to
 After running this command, the tool will generate a PDB file (`tk2pdb.pdb`) from the input XYZ file (`complex.xyz`). This PDB file can be used for further analysis or visualization in tools that require PDB format, such as PyMOL.
 
 10. Electric Field Module
-=========================
+-------------------
 
 ### 10.1 Overview
 
@@ -958,7 +958,7 @@ After running this command, the tool will generate the following files:
 These files can be visualized in molecular visualization software like PyMOL or VMD, allowing you to analyze the distribution and magnitude of the electric field around the molecule.
 
 11. eftraj Module
-=================
+-------------------
 
 ### 11.1 Overview
 
@@ -1106,7 +1106,7 @@ After running this command, the tool will generate the following files:
 These files can be visualized in molecular visualization software like PyMOL or VMD, allowing you to analyze the distribution and magnitude of the electric field around the molecule.
 
 11. eftraj Module
-=================
+-------------------
 
 ### 11.1 Overview
 
