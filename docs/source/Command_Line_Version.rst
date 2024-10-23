@@ -1,5 +1,8 @@
-Command-line Version
+Command Line Version
 ====================
+
+Basic Usage
+-----------
 
 1. Introduction
 ---------------
@@ -744,7 +747,7 @@ The Connect module operates by invoking the `TinkerModellor().connect()` method,
        tkm.connect(args.tk, parse_ndx(args.ndx), args.xyz)
 
 9. tk2pdb Module
-================
+=================
 
 ### 9.1 Overview
 
@@ -791,6 +794,7 @@ The `tk2pdb` module operates by invoking the `TinkerModellor().tk2pdb()` method,
 .. code-block:: python
 
    if args.module == "tk2pdb":
+       from tinkermodellor.build import parse_ndx
        tkm = TinkerModellor()
        try:
            int(args.depth)
@@ -912,6 +916,154 @@ The `ef` module operates by invoking specific methods in the `TinkerModellor()` 
                raise ValueError("The charge method must be eem, qeq or qtpie.")
            else:
                charge_method = args.chg.lower()
+       tkm = TinkerModellor()
+       if args.type == 'point':
+           if args.point is None:
+               raise ValueError("The point is required.")
+           point = [float(i) for i in args.point.split(',')]
+           tkm.electric_field_point(tinker_xyz=tinker_xyz, charge_method=charge_method, point=point)
+       elif args.type == 'grid':
+           # Grid-related calculations and validations
+           ...
+       elif args.type == 'bond':
+           # Bond-related calculations and validations
+           ...
+
+### 10.5 Example: Calculating Electric Field on a Grid
+
+In this section, we will demonstrate how to use the `ef` module to calculate the electric field on a grid using the provided example files. The example is located in the directory `example/ef/grid/ex1/` and illustrates a practical application of grid-based electric field calculations.
+
+**Files Involved:**
+
+- `ligand.xyz`: The Tinker XYZ file that defines the molecular structure for which the electric field will be calculated.
+- `ANTECHAMBER_AC.AC` & `ANTECHAMBER_AC.AC0`: Files describing atomic types and force field parameters, which are necessary inputs for the electric field calculation.
+- `ATOMTYPE.INF`: A file that details the atom types in the molecular system, crucial for defining the force field parameters.
+- `TKM_Ex.dx`, `TKM_Ey.dx`, `TKM_Ez.dx`: These files contain the electric field components along the x, y, and z directions, respectively, calculated on the grid.
+- `TKM_Magnitude.dx`: This file contains the magnitude of the electric field on the grid, providing a scalar value for the field strength at each grid point.
+- `openbabel.sdf`, `new.mol2`, `openbabel.mol2`: These are additional molecular structure files, used for conversion or intermediate steps in preparing the input XYZ file.
+
+**Command:**
+
+.. code-block:: bash
+
+   tkm ef --type grid --tk ligand.xyz --chg eem --rad 5.0 --den 3 --dx TKM
+
+After running this command, the tool will generate the following files:
+
+- `TKM_Ex.dx`: Contains the x-component of the electric field.
+- `TKM_Ey.dx`: Contains the y-component of the electric field.
+- `TKM_Ez.dx`: Contains the z-component of the electric field.
+- `TKM_Magnitude.dx`: Contains the magnitude of the electric field on the grid.
+
+These files can be visualized in molecular visualization software like PyMOL or VMD, allowing you to analyze the distribution and magnitude of the electric field around the molecule.
+
+11. eftraj Module
+=================
+
+### 11.1 Overview
+
+The `eftraj` module in TinkerModellor is designed to calculate the electric field along a molecular trajectory described by a Tinker ARC file. This module allows users to compute the electric field at a specific point, on a grid, or projected along a bond as the molecule evolves over time. It is particularly useful for analyzing dynamic electrostatic properties in molecular simulations.
+
+### 11.2 Command Syntax
+
+To use the `eftraj` module, the command structure is as follows:
+
+.. code-block:: bash
+
+   tkm eftraj --type <job_type> --tk <input_txyz_file> --arc <input_arc_file> [options]
+
+**Options:**
+
+- `--type`: Specifies the job type, which can be one of the following:
+  - `point`: Calculate the electric field at a specific point.
+  - `grid`: Calculate the electric field on a grid (not implemented yet).
+  - `bond`: Calculate the electric field projected along a bond.
+- `--tk`: Specifies the path to the input Tinker XYZ file.
+- `--arc`: Specifies the path to the input Tinker ARC trajectory file.
+- `--chg`: (Optional) Specifies the charge method. Options are `eem`, `qeq`, or `qtpie`. Default is `eem`.
+- `--point`: (Optional) Specifies the point at which to calculate the electric field. Required for point job type. Format: `x,y,z`.
+- `--ndx`: (Optional) Specifies the atom index which is the center of the grid. Required for `grid` job type.
+- `--rad`: (Optional) Specifies the radius of the grid. Default is `5.0` Angstroms.
+- `--den`: (Optional) Specifies the density of the grid. Default is `3`, which corresponds to `20` grid points per Angstrom.
+- `--out`: (Optional) Specifies the output file name for the results. Required for point and bond job types. Default is `TKM`.
+- `--dx`: (Optional) Specifies the prefix for the Pymol output file when using the grid type. Default is `TKM`.
+- `--bond`: (Optional) Specifies the atom indices that define the bond for the bond job type. Format: `atom1,atom2`.
+- `--mask`: (Optional) Masks the electric field of the bond molecule. Default is `True`.
+- `--otf`: (Optional) Indicates whether to compute charges on the fly. Default is `False`.
+
+### 11.3 Example Usage
+
+Here’s a practical example of how to use the `eftraj` module to calculate the electric field at a specific point along a trajectory:
+
+.. code-block:: bash
+
+   tkm eftraj --type point --tk my_structure.xyz --arc my_trajectory.arc --chg eem --point 0.0,0.0,0.0 --out electric_field.csv
+
+**Explanation:**
+
+- `--type point`: Specifies that the job type is to calculate the electric field at a point.
+- `--tk my_structure.xyz`: Specifies the path to the input Tinker XYZ file.
+- `--arc my_trajectory.arc`: Specifies the path to the input Tinker ARC trajectory file.
+- `--chg eem`: Uses the `eem` charge method for the calculation.
+- `--point 0.0,0.0,0.0`: Calculates the electric field at the origin (`0.0, 0.0, 0.0`).
+- `--out electric_field.csv`: Saves the results to `electric_field.csv`.
+
+**For a bond-based calculation along a trajectory:**
+
+.. code-block:: bash
+
+   tkm eftraj --type bond --tk my_structure.xyz --arc my_trajectory.arc --chg qeq --bond 1,2 --out bond_field.csv --otf
+
+**Explanation:**
+
+- `--type bond`: Specifies that the job type is to calculate the electric field projected along a bond.
+- `--tk my_structure.xyz`: Specifies the path to the input Tinker XYZ file.
+- `--arc my_trajectory.arc`: Specifies the path to the input Tinker ARC trajectory file.
+- `--chg qeq`: Uses the `qeq` charge method for the calculation.
+- `--bond 1,2`: Specifies that the bond is defined by the atoms with indices `1` and `2`.
+- `--out bond_field.csv`: Saves the results to `bond_field.csv`.
+- `--otf`: Enables on-the-fly charge computation.
+
+After running these commands, the tool will calculate the electric field based on the specified parameters and save the results in the designated output files.
+
+### 11.4 Implementation Details
+
+The `eftraj` module operates by invoking specific methods in the `TinkerModellor()` class, depending on the job type specified (`point`, `grid`, or `bond`). Each method processes the input Tinker XYZ file and the ARC trajectory file, calculating the electric field over the course of the molecular trajectory based on the provided options.
+
+**Implementation Steps:**
+
+1. **Input Validation**: The XYZ and ARC files are processed, and the charge method is validated.
+2. **Electric Field Calculation Based on Job Type**:
+   - For `point`, the function calls `electric_field_point_traj`.
+   - For `grid`, the function (currently not implemented) would compute the field across a grid.
+   - For `bond`, the function calls `electric_field_bond_traj`.
+3. **Output**: The results are saved in appropriate formats (CSV for `point` and `bond` calculations).
+
+**Relevant Implementation Code:**
+
+.. code-block:: python
+
+   if args.module == "eftraj":
+       from tinkermodellor.build import parse_ndx
+       try:
+           tinker_xyz = os.path.abspath(args.tk)
+       except:
+           raise ValueError("The path to the input TXYZ file is required.")
+       
+       try:
+           tinker_arc = os.path.abspath(args.arc)
+       except:
+           raise ValueError("The path to the input ARC file is required.")
+       
+       if args.chg is None:
+           print("The charge method is not given, use EEM as default.")
+           charge_method = 'eem'
+       else:
+           if args.chg.lower() not in ['eem', 'qeq', 'qtpie']:
+               raise ValueError("The charge method must be eem, qeq or qtpie.")
+           else:
+               charge_method = args.chg.lower()
+   
        tkm = TinkerModellor()
        if args.type == 'point':
            if args.point is None:
