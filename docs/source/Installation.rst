@@ -8,7 +8,7 @@ Firstly, you can download it through git or zip file:
 
 .. code-block:: bash
 
-   git clone git@github.com:Hsuchein/TinkerModeller.git
+   git clone git@github.com:WanluLigroupUCSD/TinkerModellor.git
 
 Then, we recommand to use conda to configure the environment:
 
@@ -57,6 +57,7 @@ This step will generate a folder called ''dist'', which contains .whl file for e
    pip dist/your_whl_name.whl
 
 To make it straight, you could also use the shell script after getting into ''TinkerModeller'' directory:
+
 .. code-block:: bash
 
    ./reinstall

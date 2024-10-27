@@ -15,6 +15,3 @@ Contents
    Installation
    Python Interface <Python_Interface>
    Command Line Version <Command_Line_Version>
-   Citation
-   usage
-   api

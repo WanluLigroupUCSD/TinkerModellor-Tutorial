@@ -18,14 +18,14 @@ The basic command structure for using TinkerModellor is as follows:
 
    tkm [sub-command] [options]
 
-**`[sub-command]`**: The sub-command specifies the specific type of operation. Examples include:
+**[sub-command]**: The sub-command specifies the specific type of operation. Examples include:
 
 - `transform`: Convert file formats.
 - `merge`: Merge two molecular systems.
 - `delete`: Remove specific atoms from the system.
 - `rmsd`: Calculate the root-mean-square deviation of a trajectory file.
 
-**`[options]`**: The options provide the necessary parameters for the sub-command, such as file paths and format selections. Here are some common options explained:
+**[options]**: The options provide the necessary parameters for the sub-command, such as file paths and format selections. Here are some common options explained:
 
 - `--top`: Specifies the input topology file path. Supported formats are Amber (.prmtop/.top), CHARMM (.psf), and GROMACS (.top).
 - `--crd`: Specifies the input coordinate file path. Supported formats are Amber (.inpcrd/.crd), CHARMM (.crd), and GROMACS (.gro).
@@ -147,28 +147,7 @@ Below is a practical example of how to use the `Transform` module to convert an 
 
 After running this command, the tool will generate a `.xyz` file that contains the converted molecular structure data in Tinker format. Additionally, any temporary files created during the conversion process will be automatically deleted due to the `--clean` option.
 
-1.4 Implementation Details
-~~~~~~~~
-The `Transform` module works by first parsing the command-line arguments using the `argparse` library. It then invokes the `ParmEd2GMX` class to handle the conversion of the input files (`.prmtop`, `.inpcrd`, `.top`, `.gro`) from formats like Amber or GROMACS into intermediate files that can be processed by Tinker. The `TinkerModellor` class then completes the transformation by using the `TinkerModellor().transform()` method, which converts the intermediate files into a Tinker-compatible `.xyz` file. If the `--clean` option is specified, any temporary files are deleted after the conversion is completed.
-
-**Relevant Implementation Code:**
-
-.. code-block:: python
-
-   if args.module == 'transform':
-       from tinkermodellor import ParmEd2GMX 
-       parm = ParmEd2GMX()
-       crd, top = parm(args.crd, args.top, args.format) 
-       tkm = TinkerModellor()
-       tkm.transform(crd, top, args.xyz, args.ff) 
-       if args.clean:
-           os.remove(crd)
-           os.remove(top)
-           transed_file = args.ff.replace('.prm', '.json')
-           if os.path.exists(transed_file): 
-               os.remove(transed_file)
-
-1.5 Examples
+1.4 Examples
 ~~~~~~~~
 #Example 1: Converting Amber Files
 
