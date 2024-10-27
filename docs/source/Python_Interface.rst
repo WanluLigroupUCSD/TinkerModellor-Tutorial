@@ -1117,13 +1117,3 @@ Usage Example
 - **`output`**: Saves the calculated electric field data to `18_to_19.csv`.
 
 After running this command, the tool will calculate the electric field between atoms `18` and `19` for each frame in the trajectory and save the results in the `18_to_19.csv` file. The sign indicates the direction of the electric field, while the magnitude represents the strength.
-
-FAQ
-===
-
-.. include:: faq.rst
-
-Contact
-=======
-
-.. include:: contact.rst
